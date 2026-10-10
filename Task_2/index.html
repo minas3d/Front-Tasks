@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Assignments</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 30px 16px; font-family: Arial, sans-serif;
+      background: #f3f4f8; color: #202334;
+    }
+    main { max-width: 850px; margin: auto; }
+    h1 { text-align: center; color: #4936a5; }
+    .card {
+      background: white; padding: 22px; margin: 18px 0;
+      border-radius: 12px; box-shadow: 0 4px 14px #17203312;
+    }
+    h2 { margin-top: 0; color: #4936a5; font-size: 1.2rem; }
+    button {
+      border: 0; border-radius: 7px; padding: 10px 15px;
+      background: #4936a5; color: white; cursor: pointer; margin: 5px 5px 5px 0;
+    }
+    button:hover { background: #35267f; }
+    input { padding: 9px; border: 1px solid #c9cada; border-radius: 6px; width: min(100%, 280px); }
+    .result { margin-top: 12px; padding: 10px; background: #f5f3ff; border-radius: 6px; min-height: 20px; overflow-wrap: anywhere; }
+    .hint { color: #606477; font-size: .92rem; }
+    .success { color: #167442; }
+    .error { color: #b42318; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>JavaScript Assignments</h1>
+
+  <section class="card">
+    <h2>1. Display the current date and time</h2>
+    <p>Click the button to display the current date and time in your local format.</p>
+    <button id="dateButton">Show Date &amp; Time</button>
+    <div id="dateResult" class="result" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>2. Advertising popup after 3 seconds</h2>
+    <p class="hint">Allow pop-ups for this page in your browser. The new window may otherwise be blocked.</p>
+    <button id="openAdButton">Open Advertising Window</button>
+    <button id="closeAdButton">Close Advertising Window</button>
+    <div id="popupResult" class="result" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Regular expression for an even number</h2>
+    <p>An even number must contain digits only and end in 0, 2, 4, 6, or 8.</p>
+    <label for="numberInput">Enter a number:</label><br><br>
+    <input id="numberInput" type="text" placeholder="Example: 132">
+    <button id="checkNumberButton">Check Number</button>
+    <div id="numberResult" class="result" aria-live="polite"></div>
+    <p class="hint">Regular expression: <code>/^\d*[02468]$/</code> (with a non-empty check).</p>
+  </section>
+
+  <section class="card">
+    <h2>4. User information, validation, and welcome message</h2>
+    <p>Click the button and enter your information. The script validates each field and asks you to choose red, green, or blue.</p>
+    <button id="userButton">Enter User Information</button>
+    <div id="userResult" class="result" aria-live="polite"></div>
+  </section>
+</main>
+
+<script>
+  // Assignment 1: show the current local date and time.
+  document.getElementById("dateButton").addEventListener("click", function () {
+    document.getElementById("dateResult").textContent = new Date().toLocaleString();
+  });
+
+  // Assignment 2: open an advertising window after 3 seconds and provide a close button.
+  let advertisingWindow = null;
+  document.getElementById("openAdButton").addEventListener("click", function () {
+    const result = document.getElementById("popupResult");
+    result.textContent = "The advertising window will open in 3 seconds...";
+    window.setTimeout(function () {
+      advertisingWindow = window.open("", "advertisingWindow", "width=600,height=500");
+      if (!advertisingWindow) {
+        result.textContent = "The browser blocked the pop-up. Allow pop-ups for this page and try again.";
+        return;
+      }
+
+      advertisingWindow.document.open();
+      advertisingWindow.document.write(`<!DOCTYPE html>
+        <html lang="en"><head><meta charset="UTF-8"><title>Special Offer</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 25px; background: #fff8e8; color: #242424; line-height: 1.6; }
+          h1 { color: #a54b00; }
+          .offer { padding: 16px; background: white; border: 2px solid #f0b44d; border-radius: 10px; }
+        </style></head><body>
+        <h1>Special Advertising Offer!</h1>
+        <div class="offer">
+          <h2>Discover Something New</h2>
+          <p>Welcome to our special advertising page. We are excited to share our latest offer with you.</p>
+          <p>Explore products and services designed to make your day easier. Our team is committed to providing a friendly experience and useful solutions for our customers.</p>
+          <p>Take your time to learn more about the offer, compare your options, and choose what works best for you.</p>
+          <p>Thank you for visiting. We hope you enjoy browsing and have a wonderful day!</p>
+        </div>
+        </body></html>`);
+      advertisingWindow.document.close();
+      result.textContent = "Advertising window opened.";
+    }, 3000);
+  });
+
+  document.getElementById("closeAdButton").addEventListener("click", function () {
+    if (advertisingWindow && !advertisingWindow.closed) {
+      advertisingWindow.close();
+      document.getElementById("popupResult").textContent = "Advertising window closed.";
+    } else {
+      document.getElementById("popupResult").textContent = "There is no open advertising window to close.";
+    }
+  });
+
+  // Assignment 3: digits only, and the last digit must be even.
+  const evenNumberRegex = /^\d*[02468]$/;
+  document.getElementById("checkNumberButton").addEventListener("click", function () {
+    const value = document.getElementById("numberInput").value.trim();
+    const isEven = value.length > 0 && evenNumberRegex.test(value);
+    const result = document.getElementById("numberResult");
+    result.textContent = isEven ? "true — this is an even number." : "false — enter a whole number that ends in 0, 2, 4, 6, or 8.";
+    result.className = "result " + (isEven ? "success" : "error");
+  });
+
+  // Assignment 4: collect and validate the user's information.
+  document.getElementById("userButton").addEventListener("click", function () {
+    let name, phone, mobile, email;
+
+    while (true) {
+      name = prompt("Enter your name (letters and spaces only):");
+      if (name === null) return;
+      name = name.trim();
+      if (name.length > 0 && /^[\p{L}\s'-]+$/u.test(name)) break;
+      alert("Invalid name. Use letters, spaces, apostrophes, or hyphens only.");
+    }
+
+    while (true) {
+      phone = prompt("Enter your phone number (exactly 8 digits):");
+      if (phone === null) return;
+      if (/^\d{8}$/.test(phone)) break;
+      alert("Invalid phone number. It must contain exactly 8 digits.");
+    }
+
+    while (true) {
+      mobile = prompt("Enter your mobile number (11 digits, starts with 010, 011, or 012):");
+      if (mobile === null) return;
+      if (/^01[012]\d{8}$/.test(mobile)) break;
+      alert("Invalid mobile number. It must be 11 digits and start with 010, 011, or 012.");
+    }
+
+    while (true) {
+      email = prompt("Enter your email address (example: abc@123.com):");
+      if (email === null) return;
+      email = email.trim();
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) break;
+      alert("Invalid email format. Please try again.");
+    }
+
+    let color;
+    while (true) {
+      color = prompt("Choose a welcome message color: red, green, or blue:");
+      if (color === null) return;
+      color = color.trim().toLowerCase();
+      if (["red", "green", "blue"].includes(color)) break;
+      alert("Please choose only red, green, or blue.");
+    }
+
+    const today = new Date().toLocaleDateString();
+    const result = document.getElementById("userResult");
+    result.style.color = color;
+    result.className = "result";
+    result.textContent = `Welcome ${name}! Today's date is ${today}. Phone: ${phone}. Mobile: ${mobile}. Email: ${email}.`;
+  });
+</script>
+</body>
+</html>
