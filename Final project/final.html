@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Corner Shop</title>
+  <style>
+    :root {
+      --bg: #f5f3ee;
+      --card: #fff;
+      --ink: #22282f;
+      --mute: #6b7280;
+      --line: #dcd8cf;
+      --acc: #1e5f74;
+      --acc2: #154759;
+      --ok: #2f7d4f;
+      --bad: #b3341f;
+      --warn: #a8741a
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.5 Georgia, "Times New Roman", serif
+    }
+
+    h1,
+    h2,
+    h3,
+    button,
+    input,
+    select,
+    textarea,
+    nav,
+    th,
+    .badge {
+      font-family: "Trebuchet MS", Verdana, sans-serif
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      margin: .2em 0 .6em
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      margin: 0 0 .6em
+    }
+
+    header {
+      background: var(--acc2);
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .4rem 1.2rem;
+      padding: .7rem 1.2rem
+    }
+
+    header .brand {
+      font: 700 1.3rem Georgia, serif;
+      margin-right: auto;
+      color: #fff;
+      text-decoration: none
+    }
+
+    header a,
+    header button.link {
+      color: #e6f0f3;
+      text-decoration: none;
+      font-size: .92rem;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      padding: .2rem 0
+    }
+
+    header a.on {
+      color: #fff;
+      border-bottom: 2px solid #f0b95b
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.2rem
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1rem
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem
+    }
+
+    .prod img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #e8e6df
+    }
+
+    .prod h3 {
+      margin: .5rem 0 .1rem;
+      font-size: 1.02rem
+    }
+
+    .price {
+      font: 700 1.05rem "Trebuchet MS", sans-serif;
+      color: var(--acc2)
+    }
+
+    .mute {
+      color: var(--mute);
+      font-size: .88rem
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      align-items: center
+    }
+
+    .row.sp {
+      justify-content: space-between
+    }
+
+    button,
+    .btn {
+      background: var(--acc);
+      color: #fff;
+      border: 0;
+      border-radius: 4px;
+      padding: .45rem .9rem;
+      font-size: .9rem;
+      cursor: pointer
+    }
+
+    button:hover {
+      background: var(--acc2)
+    }
+
+    button.alt {
+      background: #fff;
+      color: var(--acc2);
+      border: 1px solid var(--acc)
+    }
+
+    button.bad {
+      background: var(--bad)
+    }
+
+    button.ok {
+      background: var(--ok)
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #f0b95b;
+      outline-offset: 1px
+    }
+
+    label {
+      display: block;
+      font: 600 .88rem "Trebuchet MS", sans-serif;
+      margin: .7rem 0 .2rem
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: .5rem;
+      border: 1px solid #bdb8ab;
+      border-radius: 4px;
+      font-size: .95rem;
+      background: #fff
+    }
+
+    input.invalid,
+    select.invalid,
+    textarea.invalid {
+      border-color: var(--bad)
+    }
+
+    .err {
+      color: var(--bad);
+      font: .82rem "Trebuchet MS", sans-serif;
+      min-height: 1em;
+      display: block
+    }
+
+    .form {
+      max-width: 440px
+    }
+
+    .form.wide {
+      max-width: 640px
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border: 1px solid var(--line)
+    }
+
+    th,
+    td {
+      padding: .5rem .6rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      font-size: .9rem;
+      vertical-align: top
+    }
+
+    th {
+      background: #ece9e0
+    }
+
+    td img {
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+      border-radius: 3px
+    }
+
+    .scroll {
+      overflow-x: auto
+    }
+
+    .badge {
+      padding: .1rem .5rem;
+      border-radius: 99px;
+      font-size: .78rem;
+      color: #fff
+    }
+
+    .pending {
+      background: var(--warn)
+    }
+
+    .confirmed {
+      background: var(--ok)
+    }
+
+    .rejected {
+      background: var(--bad)
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: .6rem;
+      margin-bottom: 1rem
+    }
+
+    .heart {
+      background: none;
+      color: var(--bad);
+      border: 1px solid var(--line);
+      padding: .2rem .5rem
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: #fff;
+      padding: .6rem 1rem;
+      border-radius: 4px;
+      font: .9rem "Trebuchet MS", sans-serif;
+      display: none;
+      z-index: 9
+    }
+
+    @media(max-width:600px) {
+      .filters {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header id="top"></header>
+  <main id="app"></main>
+  <div id="toast" role="status"></div>
+  <script>
+    /* ---------- helpers & "database" (localStorage) ---------- */
+    const $ = s => document.querySelector(s);
+    const db = {
+      get: (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } },
+      set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
+    };
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const money = n => '$' + Number(n).toFixed(2);
+    const ph = n => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="100%" height="100%" fill="#dfe6e3"/><text x="50%" y="50%" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#4b6358">${esc(n)}</text></svg>`);
+    let toastT;
+    function toast(m) { const t = $('#toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(toastT); toastT = setTimeout(() => t.style.display = 'none', 2600); }
+
+    /* seed data on first run */
+    if (!db.get('users')) {
+      db.set('users', [{ id: 'u1', name: 'Main Admin', email: 'admin@shop.com', password: 'Admin@123', role: 'admin' }]);
+      db.set('categories', [{ id: 'c1', name: 'Books' }, { id: 'c2', name: 'Stationery' }, { id: 'c3', name: 'Electronics' }]);
+      db.set('products', [
+        { id: 'p1', name: 'Clean Code', image: '', category: 'c1', price: 32, stock: 12, description: 'A handbook of agile software craftsmanship.' },
+        { id: 'p2', name: 'Pocket Notebook', image: '', category: 'c2', price: 4.5, stock: 60, description: 'Dotted pages, sewn binding, fits any pocket.' },
+        { id: 'p3', name: 'Wireless Mouse', image: '', category: 'c3', price: 18.9, stock: 25, description: 'Quiet clicks, 12-month battery, USB receiver.' }
+      ]);
+      db.set('orders', []);
+    }
+    const users = () => db.get('users', []), prods = () => db.get('products', []), cats = () => db.get('categories', []), orders = () => db.get('orders', []);
+    const me = () => users().find(u => u.id === db.get('session'));
+    const catName = id => (cats().find(c => c.id === id) || {}).name || 'Uncategorised';
+    const cartKey = () => 'cart_' + me().id, wishKey = () => 'wish_' + me().id;
+
+    /* ---------- validation ---------- */
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const passRe = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+    function showErrors(form, errs) {
+      form.querySelectorAll('.err').forEach(e => e.textContent = '');
+      form.querySelectorAll('.invalid').forEach(e => e.classList.remove('invalid'));
+      Object.entries(errs).forEach(([k, msg]) => {
+        const e = form.querySelector(`[data-err="${k}"]`); if (e) e.textContent = msg;
+        const f = form.elements[k]; if (f) f.classList.add('invalid');
+      });
+      const first = Object.keys(errs)[0]; if (first && form.elements[first]) form.elements[first].focus();
+      return !Object.keys(errs).length;
+    }
+    const field = (name, label, type = 'text', val = '', attrs = '') =>
+      `<label for="f-${name}">${label}</label><input id="f-${name}" name="${name}" type="${type}" value="${esc(val)}" ${attrs}><span class="err" data-err="${name}"></span>`;
+    const fd = f => Object.fromEntries(new FormData(f).entries());
+    const val = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v]));
+
+    /* ---------- state ---------- */
+    let filt = { q: '', cat: '', max: '' }, editP = null, editC = null, pendingImg = '';
+
+    /* ---------- layout ---------- */
+    function nav() {
+      const u = me(), r = location.hash || '#/';
+      const l = (h, t) => `<a href="${h}" class="${r === h ? 'on' : ''}">${t}</a>`;
+      let h = `<a class="brand" href="#/">Corner Shop</a>`;
+      if (!u) h += l('#/', 'Shop') + l('#/login', 'Log in') + l('#/register', 'Create account');
+      else if (u.role === 'admin') h += l('#/admin/products', 'Products') + l('#/admin/categories', 'Categories') + l('#/admin/orders', 'Orders') + l('#/admin/admins', 'Admins');
+      else {
+        const c = db.get(cartKey(), []).reduce((s, i) => s + i.q, 0);
+        h += l('#/', 'Shop') + l('#/wishlist', 'Wish list') + l('#/cart', `Cart (${c})`) + l('#/orders', 'My orders');
+      }
+      if (u) h += `<span class="mute" style="color:#cfe0e6">${esc(u.name)}</span><button class="link" data-a="logout">Log out</button>`;
+      $('#top').innerHTML = h;
+    }
+
+    function render() {
+      const u = me(), r = (location.hash || '#/').slice(1);
+      const need = role => { if (!u) { location.hash = '#/login'; return false; } if (role && u.role !== role) { location.hash = u.role === 'admin' ? '#/admin/products' : '#/'; return false; } return true; };
+      const A = $('#app');
+      if ((r === '/login' || r === '/register') && u) { location.hash = u.role === 'admin' ? '#/admin/products' : '#/'; return; }
+      if (r === '/' && u && u.role === 'admin') { location.hash = '#/admin/products'; return; }
+      const routes = {
+        '/': () => shop(A), '/login': () => loginView(A), '/register': () => registerView(A),
+        '/wishlist': () => need('customer') && wishView(A), '/cart': () => need('customer') && cartView(A), '/orders': () => need('customer') && myOrders(A),
+        '/admin/products': () => need('admin') && adminProducts(A), '/admin/categories': () => need('admin') && adminCats(A),
+        '/admin/orders': () => need('admin') && adminOrders(A), '/admin/admins': () => need('admin') && adminAdmins(A)
+      };
+      (routes[r] || routes['/'])();
+      nav();
+    }
+
+    /* ---------- auth ---------- */
+    function loginView(A) {
+      A.innerHTML = `<h1>Log in</h1><form class="form card" id="login" novalidate>${field('email', 'Email', 'email')}${field('password', 'Password', 'password')}
+  <span class="err" data-err="form"></span><button>Log in</button> <p class="mute">New here? <a href="#/register">Create an account</a>. Demo admin: admin@shop.com / Admin@123</p></form>`;
+      $('#login').onsubmit = e => {
+        e.preventDefault(); const d = val(fd(e.target)), er = {};
+        if (!d.email) er.email = 'Enter your email.'; else if (!emailRe.test(d.email)) er.email = 'Enter a valid email like name@example.com.';
+        if (!d.password) er.password = 'Enter your password.';
+        if (!showErrors(e.target, er)) return;
+        const u = users().find(x => x.email.toLowerCase() === d.email.toLowerCase());
+        if (!u) return showErrors(e.target, { email: 'No account uses this email. Create an account first.' });
+        if (u.password !== d.password) return showErrors(e.target, { password: 'Wrong password. Try again.' });
+        db.set('session', u.id); location.hash = u.role === 'admin' ? '#/admin/products' : '#/'; render();
+      };
+    }
+    function registerView(A) {
+      A.innerHTML = `<h1>Create account</h1><form class="form card" id="reg" novalidate>${field('name', 'Full name')}${field('email', 'Email', 'email')}${field('password', 'Password (8+ characters, letters and numbers)', 'password')}${field('confirm', 'Confirm password', 'password')}<button>Create account</button></form>`;
+      $('#reg').onsubmit = e => {
+        e.preventDefault(); const d = val(fd(e.target)), er = {};
+        if (d.name.length < 3) er.name = 'Name must be at least 3 characters.';
+        if (!emailRe.test(d.email)) er.email = 'Enter a valid email like name@example.com.';
+        else if (users().some(u => u.email.toLowerCase() === d.email.toLowerCase())) er.email = 'This email is already registered. Log in instead.';
+        if (!passRe.test(d.password)) er.password = 'Use at least 8 characters with a letter and a number.';
+        if (d.confirm !== d.password) er.confirm = 'Passwords do not match.';
+        if (!showErrors(e.target, er)) return;
+        const u = { id: uid(), name: d.name, email: d.email, password: d.password, role: 'customer' };
+        db.set('users', [...users(), u]); db.set('session', u.id); toast('Account created.'); location.hash = '#/'; render();
+      };
+    }
+
+    /* ---------- customer: shop ---------- */
+    function card(p) {
+      const u = me(), w = u && u.role === 'customer' ? db.get(wishKey(), []).includes(p.id) : false;
+      return `<article class="card prod"><img src="${esc(p.image || ph(p.name))}" alt="${esc(p.name)}"><h3>${esc(p.name)}</h3>
+  <div class="mute">${esc(catName(p.category))}</div><p class="mute">${esc(p.description)}</p>
+  <div class="row sp"><span class="price">${money(p.price)}</span><span class="mute">${p.stock > 0 ? p.stock + ' in stock' : 'Out of stock'}</span></div>
+  <div class="row" style="margin-top:.5rem"><button data-a="addCart" data-id="${p.id}" ${p.stock < 1 ? 'disabled' : ''}>Add to cart</button>
+  <button class="heart" data-a="wish" data-id="${p.id}" aria-label="Toggle wish list">${w ? '♥' : '♡'}</button></div></article>`;
+    }
+    function shop(A) {
+      A.innerHTML = `<h1>Shop</h1><div class="filters"><input id="q" placeholder="Search by name" value="${esc(filt.q)}" aria-label="Search">
+  <select id="cat" aria-label="Category"><option value="">All categories</option>${cats().map(c => `<option value="${c.id}" ${filt.cat === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
+  <input id="max" type="number" min="0" placeholder="Max price" value="${esc(filt.max)}" aria-label="Max price"></div><div class="grid" id="list"></div>`;
+      const draw = () => {
+        const l = prods().filter(p => p.name.toLowerCase().includes(filt.q.toLowerCase()) && (!filt.cat || p.category === filt.cat) && (!filt.max || p.price <= +filt.max));
+        $('#list').innerHTML = l.map(card).join('') || '<p class="mute">No products match these filters. Clear a filter to see more.</p>';
+      };
+      $('#q').oninput = e => { filt.q = e.target.value; draw(); };
+      $('#cat').onchange = e => { filt.cat = e.target.value; draw(); };
+      $('#max').oninput = e => { filt.max = e.target.value; draw(); };
+      draw();
+    }
+    function wishView(A) {
+      const ids = db.get(wishKey(), []), l = prods().filter(p => ids.includes(p.id));
+      A.innerHTML = `<h1>Wish list</h1><div class="grid">${l.map(card).join('') || '<p class="mute">Your wish list is empty. Tap ♡ on a product to save it.</p>'}</div>`;
+    }
+    function cartView(A) {
+      const cart = db.get(cartKey(), []).map(i => ({ ...i, p: prods().find(p => p.id === i.id) })).filter(i => i.p);
+      const total = cart.reduce((s, i) => s + i.p.price * i.q, 0);
+      A.innerHTML = `<h1>Cart</h1>` + (cart.length ? `<div class="scroll"><table><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr>
+  ${cart.map(i => `<tr><td>${esc(i.p.name)}</td><td>${money(i.p.price)}</td><td><button class="alt" data-a="qty" data-id="${i.id}" data-d="-1">−</button> ${i.q} <button class="alt" data-a="qty" data-id="${i.id}" data-d="1">+</button></td><td>${money(i.p.price * i.q)}</td><td><button class="bad" data-a="rmCart" data-id="${i.id}">Remove</button></td></tr>`).join('')}</table></div>
+  <p class="row sp"><strong>Total: ${money(total)}</strong><button data-a="checkout">Place order</button></p><p class="mute">Orders stay pending until an admin confirms or rejects them.</p>` : '<p class="mute">Your cart is empty. <a href="#/">Browse the shop</a>.</p>');
+    }
+    const badge = s => `<span class="badge ${s}">${s}</span>`;
+    const ordersTable = (l, admin) => `<div class="scroll"><table><tr><th>Order</th><th>Date</th>${admin ? '<th>Customer</th>' : ''}<th>Items</th><th>Total</th><th>Status</th>${admin ? '<th>Action</th>' : ''}</tr>
+${l.map(o => `<tr><td>#${o.id.slice(-5)}</td><td>${new Date(o.date).toLocaleString()}</td>${admin ? `<td>${esc(o.userName)}</td>` : ''}<td>${o.items.map(i => `${esc(i.name)} × ${i.q}`).join('<br>')}</td><td>${money(o.total)}</td><td>${badge(o.status)}</td>
+${admin ? `<td>${o.status === 'pending' ? `<button class="ok" data-a="cfm" data-id="${o.id}">Confirm</button> <button class="bad" data-a="rej" data-id="${o.id}">Reject</button>` : '—'}</td>` : ''}</tr>`).join('')}</table></div>`;
+    function myOrders(A) {
+      const l = orders().filter(o => o.userId === me().id).reverse();
+      A.innerHTML = `<h1>My orders</h1>` + (l.length ? ordersTable(l, false) : '<p class="mute">No orders yet. Your placed orders will show here.</p>');
+    }
+
+    /* ---------- admin ---------- */
+    function adminProducts(A) {
+      const p = editP ? prods().find(x => x.id === editP) : null; pendingImg = '';
+      A.innerHTML = `<h1>Products</h1><form class="card form wide" id="pf" novalidate><h2>${p ? 'Edit product' : 'Add product'}</h2>
+  ${field('name', 'Name', 'text', p?.name)}
+  <label for="f-category">Category</label><select id="f-category" name="category"><option value="">Select a category</option>${cats().map(c => `<option value="${c.id}" ${p?.category === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select><span class="err" data-err="category"></span>
+  ${field('price', 'Price', 'number', p?.price, 'step="0.01" min="0"')}${field('stock', 'Stock quantity', 'number', p?.stock, 'step="1" min="0"')}
+  ${field('image', 'Image URL (or upload a file below)', 'text', p && !p.image.startsWith('data:') ? p.image : '')}
+  <input type="file" id="file" accept="image/*" aria-label="Upload image"><span class="err" data-err="file"></span>
+  <label for="f-description">Description</label><textarea id="f-description" name="description" rows="3">${esc(p?.description)}</textarea><span class="err" data-err="description"></span>
+  <div class="row"><button>${p ? 'Save changes' : 'Add product'}</button>${p ? '<button type="button" class="alt" data-a="cancel">Cancel</button>' : ''}</div></form>
+  <h2 style="margin-top:1.4rem">All products</h2><div class="scroll"><table><tr><th>ID</th><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr>
+  ${prods().map(x => `<tr><td>${x.id.slice(-4)}</td><td><img src="${esc(x.image || ph(x.name))}" alt=""></td><td>${esc(x.name)}<div class="mute">${esc(x.description)}</div></td><td>${esc(catName(x.category))}</td><td>${money(x.price)}</td><td>${x.stock}</td>
+  <td><button class="alt" data-a="editP" data-id="${x.id}">Edit</button> <button class="bad" data-a="delP" data-id="${x.id}">Delete</button></td></tr>`).join('')}</table></div>`;
+      $('#file').onchange = e => {
+        const f = e.target.files[0]; if (!f) return;
+        if (f.size > 400 * 1024) { e.target.value = ''; return showErrors($('#pf'), { file: 'Image is over 400 KB. Choose a smaller file or use a URL.' }); }
+        const r = new FileReader(); r.onload = () => pendingImg = r.result; r.readAsDataURL(f);
+      };
+      $('#pf').onsubmit = e => {
+        e.preventDefault(); const d = val(fd(e.target)), er = {};
+        if (d.name.length < 2 || d.name.length > 60) er.name = 'Name must be 2 to 60 characters.';
+        if (!d.category) er.category = 'Select a category. Add one first if the list is empty.';
+        if (d.price === '' || isNaN(d.price) || +d.price <= 0) er.price = 'Enter a price greater than 0.';
+        if (d.stock === '' || !Number.isInteger(+d.stock) || +d.stock < 0) er.stock = 'Enter a whole number, 0 or more.';
+        const img = pendingImg || d.image || (p?.image || '');
+        if (!img) er.image = 'Add an image URL or upload a file.';
+        else if (!pendingImg && !/^https?:\/\/.+/i.test(img) && !img.startsWith('data:')) er.image = 'URL must start with http:// or https://.';
+        if (d.description.length < 10) er.description = 'Description must be at least 10 characters.';
+        if (!showErrors(e.target, er)) return;
+        const item = { id: p?.id || uid(), name: d.name, category: d.category, price: +d.price, stock: +d.stock, image: img, description: d.description };
+        db.set('products', p ? prods().map(x => x.id === p.id ? item : x) : [...prods(), item]);
+        toast(p ? 'Product updated.' : 'Product added.'); editP = null; render();
+      };
+    }
+    function adminCats(A) {
+      const c = editC ? cats().find(x => x.id === editC) : null;
+      A.innerHTML = `<h1>Categories</h1><form class="card form" id="cf" novalidate>${field('name', c ? 'Rename category' : 'New category', 'text', c?.name)}
+  <div class="row"><button>${c ? 'Save changes' : 'Add category'}</button>${c ? '<button type="button" class="alt" data-a="cancel">Cancel</button>' : ''}</div></form>
+  <h2 style="margin-top:1.4rem">All categories</h2><div class="scroll"><table><tr><th>Name</th><th>Products</th><th></th></tr>
+  ${cats().map(x => `<tr><td>${esc(x.name)}</td><td>${prods().filter(p => p.category === x.id).length}</td><td><button class="alt" data-a="editC" data-id="${x.id}">Edit</button> <button class="bad" data-a="delC" data-id="${x.id}">Delete</button></td></tr>`).join('')}</table></div>`;
+      $('#cf').onsubmit = e => {
+        e.preventDefault(); const d = val(fd(e.target)), er = {};
+        if (d.name.length < 2 || d.name.length > 30) er.name = 'Name must be 2 to 30 characters.';
+        else if (cats().some(x => x.name.toLowerCase() === d.name.toLowerCase() && x.id !== c?.id)) er.name = 'This category already exists.';
+        if (!showErrors(e.target, er)) return;
+        db.set('categories', c ? cats().map(x => x.id === c.id ? { ...x, name: d.name } : x) : [...cats(), { id: uid(), name: d.name }]);
+        toast(c ? 'Category updated.' : 'Category added.'); editC = null; render();
+      };
+    }
+    function adminOrders(A) {
+      const l = orders().slice().reverse();
+      A.innerHTML = `<h1>Orders</h1>` + (l.length ? ordersTable(l, true) : '<p class="mute">No orders yet.</p>');
+    }
+    function adminAdmins(A) {
+      A.innerHTML = `<h1>Admins</h1><form class="card form" id="af" novalidate><h2>Add another admin</h2>${field('name', 'Full name')}${field('email', 'Email', 'email')}${field('password', 'Password (8+ characters, letters and numbers)', 'password')}<button>Add admin</button></form>
+  <h2 style="margin-top:1.4rem">Current admins</h2><div class="scroll"><table><tr><th>Name</th><th>Email</th></tr>${users().filter(u => u.role === 'admin').map(u => `<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td></tr>`).join('')}</table></div>`;
+      $('#af').onsubmit = e => {
+        e.preventDefault(); const d = val(fd(e.target)), er = {};
+        if (d.name.length < 3) er.name = 'Name must be at least 3 characters.';
+        if (!emailRe.test(d.email)) er.email = 'Enter a valid email like name@example.com.';
+        else if (users().some(u => u.email.toLowerCase() === d.email.toLowerCase())) er.email = 'This email is already registered.';
+        if (!passRe.test(d.password)) er.password = 'Use at least 8 characters with a letter and a number.';
+        if (!showErrors(e.target, er)) return;
+        db.set('users', [...users(), { id: uid(), name: d.name, email: d.email, password: d.password, role: 'admin' }]); toast('Admin added.'); render();
+      };
+    }
+
+    /* ---------- actions (event delegation) ---------- */
+    const actions = {
+      logout() { localStorage.removeItem('session'); location.hash = '#/login'; render(); },
+      cancel() { editP = editC = null; render(); },
+      editP(id) { editP = id; render(); scrollTo(0, 0); }, editC(id) { editC = id; render(); },
+      delP(id) { if (confirm('Delete this product?')) { db.set('products', prods().filter(p => p.id !== id)); toast('Product deleted.'); render(); } },
+      delC(id) {
+        if (prods().some(p => p.category === id)) return toast('Move or delete the products in this category first.');
+        if (confirm('Delete this category?')) { db.set('categories', cats().filter(c => c.id !== id)); toast('Category deleted.'); render(); }
+      },
+      wish(id) {
+        if (!me()) { toast('Log in to use your wish list.'); location.hash = '#/login'; return; }
+        if (me().role !== 'customer') return toast('Only customers have a wish list.');
+        const w = db.get(wishKey(), []); db.set(wishKey(), w.includes(id) ? w.filter(x => x !== id) : [...w, id]); render();
+      },
+      addCart(id) {
+        if (!me()) { toast('Log in to add items to your cart.'); location.hash = '#/login'; return; }
+        if (me().role !== 'customer') return toast('Admins cannot place orders.');
+        const p = prods().find(x => x.id === id), c = db.get(cartKey(), []), it = c.find(i => i.id === id);
+        if ((it ? it.q : 0) + 1 > p.stock) return toast(`Only ${p.stock} of "${p.name}" in stock.`);
+        it ? it.q++ : c.push({ id, q: 1 }); db.set(cartKey(), c); toast('Added to cart.'); nav();
+      },
+      qty(id, b) {
+        const c = db.get(cartKey(), []), it = c.find(i => i.id === id), p = prods().find(x => x.id === id), n = it.q + +b.dataset.d;
+        if (n < 1) return; if (n > p.stock) return toast(`Only ${p.stock} in stock.`);
+        it.q = n; db.set(cartKey(), c); render();
+      },
+      rmCart(id) { db.set(cartKey(), db.get(cartKey(), []).filter(i => i.id !== id)); render(); },
+      checkout() {
+        const c = db.get(cartKey(), []), ps = prods(); if (!c.length) return;
+        const items = [];
+        for (const i of c) {
+          const p = ps.find(x => x.id === i.id);
+          if (!p) return toast('A product in your cart is no longer sold. Remove it.');
+          if (i.q > p.stock) return toast(`"${p.name}" has only ${p.stock} left. Lower the quantity.`);
+          items.push({ id: p.id, name: p.name, price: p.price, q: i.q });
+        }
+        db.set('orders', [...orders(), { id: uid(), userId: me().id, userName: me().name, items, total: items.reduce((s, i) => s + i.price * i.q, 0), status: 'pending', date: Date.now() }]);
+        db.set(cartKey(), []); toast('Order placed. Waiting for admin confirmation.'); location.hash = '#/orders'; render();
+      },
+      cfm(id) {
+        const o = orders().find(x => x.id === id), ps = prods();
+        for (const i of o.items) { const p = ps.find(x => x.id === i.id); if (!p || p.stock < i.q) return toast(`Not enough stock for "${i.name}". Reject the order or restock.`); }
+        o.items.forEach(i => ps.find(x => x.id === i.id).stock -= i.q); db.set('products', ps);
+        db.set('orders', orders().map(x => x.id === id ? { ...x, status: 'confirmed' } : x)); toast('Order confirmed. Stock updated.'); render();
+      },
+      rej(id) { db.set('orders', orders().map(x => x.id === id ? { ...x, status: 'rejected' } : x)); toast('Order rejected.'); render(); }
+    };
+    document.addEventListener('click', e => { const b = e.target.closest('[data-a]'); if (b && actions[b.dataset.a]) actions[b.dataset.a](b.dataset.id, b); });
+    addEventListener('hashchange', render);
+    render();
+  </script>
+</body>
+
+</html>
