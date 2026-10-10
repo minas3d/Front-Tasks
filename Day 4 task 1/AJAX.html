@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cascading Select Menus</title>
+</head>
+
+<body>
+
+    Band:
+    <select id="band">
+        <option value="">Please select</option>
+    </select>
+
+    Artist:
+    <select id="artist" disabled>
+        <option value="">Please select</option>
+    </select>
+
+    <p id="filePicker" style="display:none">
+        Select <b>rockbands.json</b> from your device:
+        <input type="file" id="fileInput" accept=".json,application/json">
+    </p>
+
+    <script>
+        var bandSelect = document.getElementById("band");
+        var artistSelect = document.getElementById("artist");
+        var filePicker = document.getElementById("filePicker");
+        var fileInput = document.getElementById("fileInput");
+        var data = null;
+
+        var bandNames = {
+            beatles: "Beatles",
+            stones: "Rolling Stones",
+            genesis: "Genesis",
+            eagles: "Eagles"
+        };
+
+        function loadData(jsonText) {
+            data = JSON.parse(jsonText);
+            bandSelect.innerHTML = '<option value="">Please select</option>';
+            for (var key in data) {
+                var opt = document.createElement("option");
+                opt.value = key;
+                opt.textContent = bandNames[key] || key;
+                bandSelect.appendChild(opt);
+            }
+            filePicker.style.display = "none";
+        }
+
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "rockbands.json", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if ((xhr.status === 200 || xhr.status === 0) && xhr.responseText) {
+                    try { loadData(xhr.responseText); }
+                    catch (e) { filePicker.style.display = "block"; }
+                } else {
+                    filePicker.style.display = "block";
+                }
+            }
+        };
+        xhr.onerror = function () { filePicker.style.display = "block"; };
+        try { xhr.send(); } catch (e) { filePicker.style.display = "block"; }
+
+        fileInput.addEventListener("change", function () {
+            var file = fileInput.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function () { loadData(reader.result); };
+            reader.readAsText(file);
+        });
+
+        
+        bandSelect.addEventListener("change", function () {
+            artistSelect.innerHTML = '<option value="">Please select</option>';
+            var members = data && data[bandSelect.value];
+            if (!members) { artistSelect.disabled = true; return; }
+
+            members.forEach(function (member) {
+                var opt = document.createElement("option");
+                opt.value = member.value;
+                opt.textContent = member.name;
+                artistSelect.appendChild(opt);
+            });
+            artistSelect.disabled = false;
+        });
+
+        
+        artistSelect.addEventListener("change", function () {
+            if (artistSelect.value) window.open(artistSelect.value, "_blank");
+        });
+    </script>
+
+</body>
+
+</html>
